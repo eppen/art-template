@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>artTemplate 递归示例</title>
+    <script src="artTemplate4.js"></script>
+</head>
+<body>
+
+<!-- 模板容器 -->
+<div id="tree-container"></div>
+art-template 
+<script id="tree-template" type="text/html">
+    <!-- 递归渲染节点 -->
+    {{each data as node}}
+        <div>
+            <span>{{node.name}}</span>
+            <!-- 递归渲染子节点 -->
+            {{if node.children && node.children.length}}
+                <div class="child-nodes">
+                    <% include('tree-template',{data:node.children}) %>
+                </div>
+            {{/if}}
+        </div>
+    {{/each}}
+</script>
+
+<script>
+    // 数据
+    var data = {
+        nodes: [
+            {
+                name: 'Node 1',
+                children: [
+                    {
+                        name: 'Node 1.1',
+                        children: [
+                            { name: 'Node 1.1.1' },
+                            { name: 'Node 1.1.2' }
+                        ]
+                    },
+                    { name: 'Node 1.2' }
+                ]
+            },
+            {
+                name: 'Node 2',
+                children: [
+                    { name: 'Node 2.1' },
+                    { name: 'Node 2.2' }
+                ]
+            }
+        ]
+    };
+
+    // 获取模板
+    var template = template.compile(document.getElementById('tree-template').innerHTML);
+
+    var obj={}
+    obj.data= data.nodes;
+    // 渲染模板
+    var renderedHTML = template(obj);
+
+    // 将渲染结果插入到页面中
+    document.getElementById('tree-container').innerHTML = renderedHTML;
+</script>
+
+</body>
+</html>
